@@ -68,36 +68,15 @@ jobs:
           ./mvnw --batch-mode --no-transfer-progress \
             "-Drevision=${version}" clean verify
 
-      - name: Ensure licensed schemas are not in the JAR
+      - name: Verify release artifact contents
         env:
           RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           set -euo pipefail
           version="${RELEASE_VERSION#v}"
-          binary_jar="target/rail-ml-jaxb-${version}.jar"
-          javadoc_jar="target/rail-ml-jaxb-${version}-javadoc.jar"
-
-          test -f "$binary_jar"
-          test -f "$javadoc_jar"
-          if ! jar tf "$binary_jar" \
-            | grep -Fx 'ro/apanescu/railml/generated/v32/RailML.class' >/dev/null; then
-            echo "The binary JAR is missing the RailML 3.2 root model class." >&2
-            exit 1
-          fi
-          if ! jar tf "$javadoc_jar" \
-            | grep -Fx 'ro/apanescu/railml/parser/RailMLParser.html' >/dev/null; then
-            echo "The Javadoc JAR is missing the documented parser API." >&2
-            exit 1
-          fi
-
-          for jar_file in \
-            "$binary_jar" \
-            "$javadoc_jar"; do
-            if jar tf "$jar_file" | grep -Ei '(^|/)[^/]+\.xsd$|(^|/)railML[^/]+/|(^|/)sample\.xml$' >/dev/null; then
-              echo "The release JAR unexpectedly contains excluded schema or sample files." >&2
-              exit 1
-            fi
-          done
+          ./scripts/verify-artifacts.sh \
+            "target/rail-ml-jaxb-${version}.jar" \
+            "target/rail-ml-jaxb-${version}-javadoc.jar"
 
       - name: Generate SHA-256 checksums
         env:

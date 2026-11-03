@@ -62,6 +62,7 @@ specifically requested and authorized.
 | `./mvnw clean verify` | Full local verification, including Javadocs |
 | `./mvnw -Drevision=0.1.0 clean verify` | Verify a release-style version |
 | `./mvnw install` | Install the built artifact in the local Maven repository |
+| `bash scripts/verify-artifacts.sh target/rail-ml-jaxb-0.1.0-SNAPSHOT.jar target/rail-ml-jaxb-0.1.0-SNAPSHOT-javadoc.jar` | Check required model/API entries and reject schemas or the sample from built JARs |
 | `git diff --check` | Detect whitespace errors in the working diff |
 | `git check-ignore -v src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd` | Confirm a local schema file is ignored |
 

@@ -13,9 +13,10 @@ Both workflows use the repository's Maven Wrapper, which pins Maven 3.10.0 and v
 the downloaded distribution checksum. GitHub Actions are pinned to full commit hashes,
 and Dependabot checks them weekly. CI runs with Java 17 and Maven caching. When
 `RAILML_CI_ENABLED` is exactly `true`, it restores the licensed schemas and runs generation,
-compilation, tests, and Javadocs on both Linux and Windows. Otherwise, a green run confirms
-Maven metadata validation through both wrappers but does not mean sources compiled, tests
-passed, or Javadocs were generated; both jobs report the skipped checks in their summaries.
+compilation, tests, Javadocs, and shared artifact-content checks on both Linux and Windows.
+Otherwise, a green run confirms Maven metadata validation through both wrappers but does
+not mean sources compiled, tests passed, Javadocs were generated, or artifacts were
+checked; both jobs report the skipped checks in their summaries.
 
 Dependabot checks Maven dependencies/plugins and GitHub Actions references weekly and opens
 update pull requests. Review the changelog and compatibility impact rather than merging
@@ -67,12 +68,12 @@ The release workflow runs only for a published release and only if the approval 
 is exactly `true`. It waits for the `release` environment's protection rules. It restores
 the schema archive, validates the tag format before restoring schemas, runs
 `./mvnw clean verify` with the leading `v` removed from the GitHub release tag (for example,
-tag `v0.1.0` builds Maven version `0.1.0`), checks that the
-binary and Javadoc JARs exist, verifies that they contain the RailML 3.2 root model and
-documented parser API respectively, and rejects schema/sample files in either archive.
-It then attaches both JARs to the GitHub Release along with `SHA256SUMS`. The checksum
-manifest is generated from the built JARs on the runner; it is an integrity aid for
-downloads, not a signature or proof of publisher identity.
+tag `v0.1.0` builds Maven version `0.1.0`), and runs the same artifact-content checks as
+schema-enabled CI. The shared `scripts/verify-artifacts.sh` guard requires the RailML 3.2
+root model and parser Javadocs and rejects schema/sample entries at any archive path. The
+workflow then attaches both JARs to the GitHub Release along with `SHA256SUMS`. The
+checksum manifest is generated from the built JARs on the runner; it is an integrity aid
+for downloads, not a signature or proof of publisher identity.
 
 `RAILML_DISTRIBUTION_APPROVED` is a repository-controlled gate, not evidence of legal
 approval. Do not set it merely to make the workflow run. The workflow does not publish to

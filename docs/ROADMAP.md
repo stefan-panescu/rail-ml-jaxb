@@ -104,7 +104,8 @@ workflow now attaches a SHA-256 manifest for both JARs and checks that schema an
 files are excluded. It also rejects tags that do not match `vMAJOR.MINOR.PATCH` before
 schema restoration or building, and verifies that the binary and Javadoc JARs contain
 their expected model/API entries. The Maven Wrapper pins Maven 3.10.0 and verifies its
-distribution checksum for consistent local and CI builds.
+distribution checksum for consistent local and CI builds. Schema-enabled CI and the
+release workflow share `scripts/verify-artifacts.sh` for JAR content checks.
 
 ## Plan maintenance
 

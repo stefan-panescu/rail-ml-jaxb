@@ -60,6 +60,11 @@ jobs:
         if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
         run: .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
 
+      - name: Verify generated artifact contents on Windows
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        shell: bash
+        run: ./scripts/verify-artifacts.sh target/rail-ml-jaxb-0.1.0-SNAPSHOT.jar target/rail-ml-jaxb-0.1.0-SNAPSHOT-javadoc.jar
+
       - name: Report schema-dependent checks skipped
         if: ${{ vars.RAILML_CI_ENABLED != 'true' }}
         run: |
@@ -116,6 +121,10 @@ jobs:
       - name: Build, test, and generate API Javadocs
         if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
+
+      - name: Verify generated artifact contents
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        run: ./scripts/verify-artifacts.sh target/rail-ml-jaxb-0.1.0-SNAPSHOT.jar target/rail-ml-jaxb-0.1.0-SNAPSHOT-javadoc.jar
 
       - name: Report schema-dependent checks skipped
         if: ${{ vars.RAILML_CI_ENABLED != 'true' }}

@@ -10,7 +10,7 @@ the legal or distribution readiness of a release.
 |---|---|---|
 | Version-specific JAXB generation | Implemented | RailML 3.2-SR4 and 3.4-RC have separate XJC executions and generated namespaces |
 | Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
-| Parser tests and Javadocs | Implemented | `mvn clean verify` exercises parsing and generates strict Javadocs when licensed schema inputs are present |
+| Parser tests and Javadocs | Implemented | Parser contract tests cover explicit versions, error cases, resource ownership, and disabled external entities |
 | GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI depends on private schema archive settings |
 | Public source-code license | Blocked / undecided | No license has been selected; do not assume public reuse or redistribution is authorized |
 | Generated-class distribution approval | Blocked / undecided | Confirm applicable RailML terms before distributing generated models |
@@ -54,14 +54,16 @@ versioning policy before implementing deployment.
 **Done when:** A consumer can follow one documented installation route, and release
 artifacts and metadata match that route.
 
-### P3 — Expand parser behavior coverage
+### P3 — Expand parser behavior coverage — complete
 
 **Plan:** Add focused tests for malformed XML, unexpected root elements, null arguments,
 incorrect typed access, and external-entity/DTD handling. Add representative minimal
 fixtures for each version only where their licensing permits.
 
 **Done when:** Public parser contracts and error behavior are covered without including
-licensed schema bundles or unsuitable real-world data fixtures.
+licensed schema bundles or unsuitable real-world data fixtures. Focused tests now cover
+malformed XML, unexpected roots, null arguments, incorrect typed access, and rejection of
+unresolved external entities.
 
 **Design constraint:** Explicit caller-selected version remains the default and current
 contract. Automatic namespace-based version detection is not planned unless separately

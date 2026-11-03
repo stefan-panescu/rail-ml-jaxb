@@ -1,18 +1,53 @@
 package ro.apanescu.railml.parser;
 
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import javax.xml.stream.XMLStreamException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RailMLParserTest {
     private final RailMLParser parser = new RailMLParser();
+
+    @Test
+    void rejectsMalformedXml() {
+        assertThrows(
+                XMLStreamException.class,
+                () -> parser.parse(xml("<railML"), RailMLVersion.V3_2_SR4));
+    }
+
+    @Test
+    void rejectsUnexpectedRootElement() {
+        assertThrows(
+                XMLStreamException.class,
+                () -> parser.parse(xml("<notRailML/>"), RailMLVersion.V3_2_SR4));
+    }
+
+    @Test
+    void rejectsNullArguments() {
+        assertThrows(
+                NullPointerException.class,
+                () -> parser.parse((InputStream) null, RailMLVersion.V3_2_SR4));
+        assertThrows(
+                NullPointerException.class,
+                () -> parser.parse(xml("<railML/>"), null));
+        assertThrows(
+                NullPointerException.class,
+                () -> parser.parse((Path) null, RailMLVersion.V3_2_SR4));
+        assertThrows(
+                NullPointerException.class,
+                () -> parser.parse(Path.of("unused.xml"), null));
+    }
 
     @Test
     void parsesRailML32SampleWithExplicitVersion() throws Exception {
@@ -24,6 +59,10 @@ class RailMLParserTest {
             assertEquals("co_01", railML.getCommon().getId());
             assertEquals(4, railML.getCommon().getOrganizationalUnits()
                     .getOrganizationalUnit().size());
+
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> parsed.valueAs(ro.apanescu.railml.generated.v34.RailML.class));
         }
     }
 
@@ -42,6 +81,23 @@ class RailMLParserTest {
     }
 
     @Test
+    void doesNotResolveExternalEntities() {
+        String document = """
+                <!DOCTYPE railML [
+                  <!ENTITY external SYSTEM "file:///should-not-be-read">
+                ]>
+                <railML xmlns="https://www.railml.org/schemas/3.2" version="3.2">
+                  &external;
+                </railML>
+                """;
+
+        JAXBException exception = assertThrows(
+                JAXBException.class,
+                () -> parser.parse(xml(document), RailMLVersion.V3_2_SR4));
+        assertTrue(exception.getLinkedException().getMessage().contains("not declared"));
+    }
+
+    @Test
     void leavesCallerProvidedInputStreamOpen() throws Exception {
         TrackingInputStream input = new TrackingInputStream(
                 "<railML xmlns=\"https://www.railml.org/schemas/3.2\" version=\"3.2\"/>"
@@ -50,6 +106,10 @@ class RailMLParserTest {
         parser.parse(input, RailMLVersion.V3_2_SR4);
 
         assertFalse(input.closed);
+    }
+
+    private static InputStream xml(String document) {
+        return new ByteArrayInputStream(document.getBytes(StandardCharsets.UTF_8));
     }
 
     private static final class TrackingInputStream extends ByteArrayInputStream {

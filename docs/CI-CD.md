@@ -6,14 +6,14 @@ The repository defines two GitHub Actions workflows:
 
 | Workflow | Trigger | Behavior |
 |---|---|---|
-| `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Always runs Maven metadata validation; runs schema-dependent `clean verify` only when explicitly enabled |
+| `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Validates Maven metadata on Linux and Windows; runs schema-dependent `clean verify` on Linux only when explicitly enabled |
 | `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs plus a SHA-256 manifest only when distribution approval is enabled and the protected environment allows the job |
 
 Both workflows use the repository's Maven Wrapper, which pins Maven 3.10.0 and verifies
-the downloaded distribution checksum. CI runs with Java 17 and Maven caching. A green run
-with full checks disabled means only `./mvnw validate` passed; it does not mean sources
-compiled, tests passed, or Javadocs were generated. The job summary makes this skipped
-state explicit.
+the downloaded distribution checksum. CI runs with Java 17 and Maven caching. With full
+checks disabled, a green run confirms Maven metadata validation through both the Linux and
+Windows wrappers; it does not mean sources compiled, tests passed, or Javadocs were
+generated. The Linux job summary makes this skipped state explicit.
 
 Dependabot checks Maven dependencies/plugins and GitHub Actions references weekly and opens
 update pull requests. Review the changelog and compatibility impact rather than merging

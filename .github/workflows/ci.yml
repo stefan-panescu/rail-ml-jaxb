@@ -14,6 +14,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  windows-wrapper:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Validate Maven project with Windows wrapper
+        run: .\mvnw.cmd --batch-mode --no-transfer-progress validate
+
   verify:
     runs-on: ubuntu-latest
     steps:

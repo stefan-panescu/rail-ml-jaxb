@@ -11,7 +11,7 @@ the legal or distribution readiness of a release.
 | Version-specific JAXB generation | Implemented | RailML 3.2-SR4 only; 3.4-RC support removed pending release and license clarification |
 | Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
 | Parser tests and Javadocs | Implemented | Parser tests cover both input forms, explicit-version behavior, error cases, resource ownership, and disabled external entities |
-| GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI needs schema inputs obtained under RailML's registration and license conditions |
+| GitHub Actions workflows | Implemented, configuration-dependent | Maven metadata validation runs on Linux and Windows; full CI needs schema inputs obtained under RailML's registration and license conditions |
 | Dependency update automation | Implemented | Dependabot checks Maven and GitHub Actions dependencies weekly; updates still require review and schema-enabled verification |
 | Public source-code license | Blocked / undecided | No license has been selected; do not assume public reuse or redistribution is authorized |
 | Generated-class distribution approval | Blocked / undecided | Confirm applicable RailML terms before distributing generated models |

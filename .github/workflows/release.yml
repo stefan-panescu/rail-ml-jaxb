@@ -93,7 +93,7 @@ jobs:
           for jar_file in \
             "$binary_jar" \
             "$javadoc_jar"; do
-            if jar tf "$jar_file" | grep -Ei '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$' >/dev/null; then
+            if jar tf "$jar_file" | grep -Ei '(^|/)[^/]+\.xsd$|(^|/)railML[^/]+/|(^|/)sample\.xml$' >/dev/null; then
               echo "The release JAR unexpectedly contains excluded schema or sample files." >&2
               exit 1
             fi

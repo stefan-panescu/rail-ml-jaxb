@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               version="3.0">
+  <jaxb:bindings schemaLocation="../resources/railML-3-2-SR4/source/schema/interlocking3.xsd"
+                 node="/xs:schema">
+    <jaxb:bindings
+        node="xs:complexType[@name='LogicalDevice']/xs:complexContent/xs:extension/xs:attribute[@name='description']">
+      <jaxb:property name="logicDescription"/>
+    </jaxb:bindings>
+  </jaxb:bindings>
+</jaxb:bindings>

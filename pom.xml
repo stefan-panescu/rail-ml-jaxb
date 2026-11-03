@@ -91,5 +91,31 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>4.2.0</version>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>target/generated-sources/jaxb</outputDirectory>
+          <sources>
+            <source>src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
   </build>
 </project>

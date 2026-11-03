@@ -234,3 +234,6 @@ build/
 .DS_Store
 
 /.mvn/
+
+src/main/resources/railML*
+!src/main/resources/railML*/*/.gitkeep

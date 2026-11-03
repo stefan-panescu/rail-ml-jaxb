@@ -1,0 +1,95 @@
+# Roadmap and plans
+
+This roadmap records project direction, prerequisites, and completion criteria. It is not
+a release promise or a fixed schedule. Status reflects the repository configuration, not
+the legal or distribution readiness of a release.
+
+## Current status
+
+| Area | Status | Notes |
+|---|---|---|
+| Version-specific JAXB generation | Implemented | RailML 3.2-SR4 and 3.4-RC have separate XJC executions and generated namespaces |
+| Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
+| Parser tests and Javadocs | Implemented | `mvn clean verify` exercises parsing and generates strict Javadocs when licensed schema inputs are present |
+| GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI depends on private schema archive settings |
+| Public source-code license | Blocked / undecided | No license has been selected; do not assume public reuse or redistribution is authorized |
+| Generated-class distribution approval | Blocked / undecided | Confirm applicable RailML terms before distributing generated models |
+| Public Maven publication | Not implemented | Current release workflow attaches JARs to GitHub Releases only |
+
+## Planned work
+
+### P0 — Establish a release decision
+
+**Prerequisites:** Project owner review of code ownership, RailML terms, and the 3.4-RC
+status.
+
+**Plan:** Select and add a license for original project code; document permitted uses of
+schema-derived output; determine which versions may be distributed and used productively.
+Only after that decision should the release approval variable be enabled.
+
+**Done when:** Licensing decisions are recorded in repository documentation, required
+license/notice files are present, and release gates reflect the approved scope.
+
+### P1 — Make full CI reproducible on GitHub
+
+**Prerequisites:** A private schema archive host and a read-only token with access for
+GitHub Actions.
+
+**Plan:** Configure the documented CI variable and secrets, run the full workflow on a
+pull request or manual dispatch, and resolve failures in schema restoration, XJC,
+compilation, tests, or Javadocs.
+
+**Done when:** A GitHub Actions run reports all schema-dependent checks passing for the
+intended supported versions, and the archive remains private and absent from artifacts.
+
+### P2 — Define stable consumer distribution
+
+**Prerequisites:** P0 distribution decision.
+
+**Plan:** Decide whether consumers should obtain releases from GitHub Releases or a Maven
+repository. If Maven publication is desired, define repository credentials, protected
+publishing permissions, signing/verification requirements if applicable, and a release
+versioning policy before implementing deployment.
+
+**Done when:** A consumer can follow one documented installation route, and release
+artifacts and metadata match that route.
+
+### P3 — Expand parser behavior coverage
+
+**Plan:** Add focused tests for malformed XML, unexpected root elements, null arguments,
+incorrect typed access, and external-entity/DTD handling. Add representative minimal
+fixtures for each version only where their licensing permits.
+
+**Done when:** Public parser contracts and error behavior are covered without including
+licensed schema bundles or unsuitable real-world data fixtures.
+
+**Design constraint:** Explicit caller-selected version remains the default and current
+contract. Automatic namespace-based version detection is not planned unless separately
+requested; if ever added, it should be an explicit API with documented ambiguity/error
+behavior, not a silent change to `parse`.
+
+### P4 — Maintain version support deliberately
+
+**Plan:** For each proposed RailML version, track its schema availability, maturity,
+license/redistribution terms, compatibility decisions, parser test coverage, and CI
+archive availability. Keep generated packages and XJC executions isolated per version.
+
+**Done when:** The version is explicitly listed in `RailMLVersion`, its API/package and
+schema prerequisites are documented, tests pass, and licensing/use limitations are
+visible to consumers.
+
+### P5 — Improve release ergonomics
+
+**Plan:** After a release is legally and operationally approved, consider adding checksum
+files and a concise release checklist. Consider Maven repository publishing only after P2
+is decided.
+
+**Done when:** Each release has reproducible source/version metadata, verified JAR
+contents, and a documented consumer-facing installation instruction.
+
+## Plan maintenance
+
+Update this roadmap when a prerequisite is met, a plan changes, or a feature is completed.
+Use pull requests to record scope and acceptance criteria. Do not mark a release-ready
+milestone complete based solely on a successful local build; required legal approvals and
+GitHub configuration are separate prerequisites.

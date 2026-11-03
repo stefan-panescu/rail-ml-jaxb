@@ -26,6 +26,16 @@ jobs:
           java-version: '17'
           cache: maven
 
+      - name: Validate release tag
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release tag must use the format vMAJOR.MINOR.PATCH (for example v0.1.0)." >&2
+            exit 1
+          fi
+
       - name: Restore locally licensed RailML schemas
         env:
           RAILML_SCHEMA_ARCHIVE_URL: ${{ secrets.RAILML_SCHEMA_ARCHIVE_URL }}

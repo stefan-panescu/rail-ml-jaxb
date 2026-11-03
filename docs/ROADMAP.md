@@ -93,7 +93,7 @@ distribution terms are clarified.
 schema prerequisites are documented, tests pass, and licensing/use limitations are
 visible to consumers.
 
-### P5 — Improve release ergonomics — checksums complete
+### P5 — Improve release ergonomics — checksums and tag validation complete
 
 **Plan:** Keep a concise release checklist. Consider Maven repository publishing only
 after P2 is decided.
@@ -101,7 +101,8 @@ after P2 is decided.
 **Done when:** Each release has reproducible source/version metadata, verified JAR
 contents, and a documented consumer-facing installation instruction. The release
 workflow now attaches a SHA-256 manifest for both JARs and checks that schema and sample
-files are excluded.
+files are excluded. It also rejects tags that do not match `vMAJOR.MINOR.PATCH` before
+schema restoration or building.
 
 ## Plan maintenance
 

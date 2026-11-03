@@ -56,12 +56,14 @@ Before publishing a release:
    decision has been made.
 5. Configure a protected GitHub environment named `release` with required reviewers and
    any applicable deployment protection rules.
-6. Create a version tag and publish the corresponding GitHub Release.
+6. Create a `vMAJOR.MINOR.PATCH` version tag (for example, `v0.1.0`) and publish the
+   corresponding GitHub Release.
 
 The release workflow runs only for a published release and only if the approval variable
 is exactly `true`. It waits for the `release` environment's protection rules. It restores
-the schema archive, runs `mvn clean verify` with the leading `v` removed from the GitHub
-release tag (for example, tag `v0.1.0` builds Maven version `0.1.0`), checks that the
+the schema archive, validates the tag format before restoring schemas, runs
+`mvn clean verify` with the leading `v` removed from the GitHub release tag (for example,
+tag `v0.1.0` builds Maven version `0.1.0`), checks that the
 binary and Javadoc JARs exist and do not contain schema files, then attaches both JARs to
 the GitHub Release along with `SHA256SUMS`. The checksum manifest is generated from the
 built JARs on the runner; it is an integrity aid for downloads, not a signature or proof

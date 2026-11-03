@@ -2,11 +2,13 @@ package ro.apanescu.railml.parser;
 
 import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.xml.stream.XMLStreamException;
 
@@ -18,6 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RailMLParserTest {
     private final RailMLParser parser = new RailMLParser();
+
+    @Test
+    void parsesFromPath(@TempDir Path directory) throws Exception {
+        Path xmlFile = directory.resolve("railml.xml");
+        Files.writeString(
+                xmlFile,
+                "<railML xmlns=\"https://www.railml.org/schemas/3.2\" version=\"3.2\"/>");
+
+        ParsedRailML parsed = parser.parse(xmlFile, RailMLVersion.V3_2_SR4);
+
+        assertEquals(RailMLVersion.V3_2_SR4, parsed.version());
+        assertInstanceOf(ro.apanescu.railml.generated.v32.RailML.class, parsed.value());
+    }
 
     @Test
     void rejectsMalformedXml() {
@@ -78,6 +93,18 @@ class RailMLParserTest {
 
         assertEquals(RailMLVersion.V3_4_RC, parsed.version());
         assertInstanceOf(ro.apanescu.railml.generated.v34.RailML.class, parsed.value());
+    }
+
+    @Test
+    void usesCallerSelectedVersionEvenWhenXmlNamespaceDiffers() throws Exception {
+        String document = """
+                <railML xmlns="https://www.railml.org/schemas/3.4" version="3.4"/>
+                """;
+
+        ParsedRailML parsed = parser.parse(xml(document), RailMLVersion.V3_2_SR4);
+
+        assertEquals(RailMLVersion.V3_2_SR4, parsed.version());
+        assertInstanceOf(ro.apanescu.railml.generated.v32.RailML.class, parsed.value());
     }
 
     @Test

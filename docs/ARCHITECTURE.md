@@ -50,7 +50,9 @@ selected version.
 
 - **Version selection:** The caller supplies the version. The parser does not inspect the
   XML namespace to choose a model and does not compare the namespace to the supplied
-  version. The caller must pass the version that matches the document.
+  version. The caller must pass the version that matches the document. If it does not,
+  parsing still uses the selected model and may produce an incomplete or misleading
+  object.
 - **Validation:** Parsing is JAXB binding, not XSD validation. A successful parse does not
   establish that a document conforms to the RailML specification.
 - **Root element:** The parser expects the document element's local name to be `railML`.

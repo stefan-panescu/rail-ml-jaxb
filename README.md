@@ -1,8 +1,9 @@
 # RailML JAXB
 
 Version-specific JAXB models and a small parser for RailML XML documents. The caller
-selects the schema version and receives its generated JAXB root object. The currently
-configured versions are RailML 3.2-SR4 and 3.4-RC.
+selects the schema version and receives its generated JAXB root object. RailML 3.2-SR4 is
+the only currently configured version; 3.4-RC support was removed pending an official
+release and clarification of its licensing and use conditions.
 
 ## Use the parser
 
@@ -70,5 +71,5 @@ repository grants permission to use or redistribute it.
 RailML schema files have separate license and usage conditions and are not distributed by
 this repository. Generated JAXB classes are derived from those schemas; confirm that
 generating and distributing them is permitted by the applicable RailML terms before
-publishing any library artifacts. In particular, RailML 3.4-RC is a development release;
-check its own terms and suitability before using it productively.
+publishing any library artifacts. RailML 3.4-RC is not supported by this project while it
+remains a development release and its conditions are unresolved.

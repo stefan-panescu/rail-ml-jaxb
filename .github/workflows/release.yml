@@ -45,7 +45,7 @@ jobs:
             --output "$archive"
           unzip -q "$archive" -d "$schema_dir"
 
-          for version in 3-2-SR4 3-4-RC; do
+          for version in 3-2-SR4; do
             test -f "$schema_dir/railML-${version}/source/schema/railml3.xsd"
             cp -R "$schema_dir/railML-${version}" src/main/resources/
           done

@@ -12,7 +12,6 @@ RailML XSDs (local build inputs)
         +-- XJC execution + version-specific XJB bindings
         |       |
         |       +-- ro.apanescu.railml.generated.v32.*
-        |       +-- ro.apanescu.railml.generated.v34.*
         |
         +-- compiled into the library artifact (generated classes only)
 
@@ -42,9 +41,7 @@ ParsedRailML parsed = new RailMLParser().parse(path, RailMLVersion.V3_2_SR4);
 var root = parsed.valueAs(ro.apanescu.railml.generated.v32.RailML.class);
 ```
 
-Use the corresponding `ro.apanescu.railml.generated.v34.RailML` class for
-`RailMLVersion.V3_4_RC`. The `valueAs` method rejects a root class that does not match the
-selected version.
+The `valueAs` method rejects a root class that does not match the selected version.
 
 ## Parser contract
 
@@ -70,16 +67,16 @@ The API is documented with Javadoc. Locally generated HTML is written to
 
 ## Generated package and binding conventions
 
-The XJC executions and binding files live in:
+The configured XJC execution and binding file live in:
 
 - `pom.xml`
 - `src/main/xjb/railml-3-2.xjb`
-- `src/main/xjb/railml-3-4.xjb`
 
-Version 3.2 and 3.4 have independent XJC executions and generated output directories.
-This isolation avoids type collisions in shared imported schemas. JAXB package names are
-versioned so applications can reference models for multiple schema versions in one JVM.
-Binding customizations also resolve known schema name conflicts.
+Each supported version should have its own XJC execution and generated output directory.
+The previous 3.4-RC execution and binding were removed while that version's release and
+licensing conditions are unresolved. The separate execution pattern avoids type collisions
+in shared imported schemas. Binding customizations also resolve known schema name
+conflicts.
 
 Do not edit files under `target/generated-sources/jaxb` by hand. Change the XSD input
 distribution, the applicable binding file, or the XJC configuration and regenerate.

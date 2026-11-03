@@ -8,7 +8,7 @@ the legal or distribution readiness of a release.
 
 | Area | Status | Notes |
 |---|---|---|
-| Version-specific JAXB generation | Implemented | RailML 3.2-SR4 and 3.4-RC have separate XJC executions and generated namespaces |
+| Version-specific JAXB generation | Implemented | RailML 3.2-SR4 only; 3.4-RC support removed pending release and license clarification |
 | Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
 | Parser tests and Javadocs | Implemented | Parser tests cover both input forms, explicit-version behavior, error cases, resource ownership, and disabled external entities |
 | GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI depends on private schema archive settings |
@@ -21,8 +21,7 @@ the legal or distribution readiness of a release.
 
 ### P0 — Establish a release decision
 
-**Prerequisites:** Project owner review of code ownership, RailML terms, and the 3.4-RC
-status.
+**Prerequisites:** Project owner review of code ownership and RailML terms.
 
 **Plan:** Select and add a license for original project code; document permitted uses of
 schema-derived output; determine which versions may be distributed and used productively.
@@ -77,6 +76,8 @@ behavior, not a silent change to `parse`.
 **Plan:** For each proposed RailML version, track its schema availability, maturity,
 license/redistribution terms, compatibility decisions, parser test coverage, and CI
 archive availability. Keep generated packages and XJC executions isolated per version.
+Do not restore 3.4-RC support until an official release is available and its use and
+distribution terms are clarified.
 
 **Done when:** The version is explicitly listed in `RailMLVersion`, its API/package and
 schema prerequisites are documented, tests pass, and licensing/use limitations are

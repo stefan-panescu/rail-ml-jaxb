@@ -77,28 +77,14 @@ class RailMLParserTest {
 
             assertThrows(
                     IllegalArgumentException.class,
-                    () -> parsed.valueAs(ro.apanescu.railml.generated.v34.RailML.class));
+                    () -> parsed.valueAs(String.class));
         }
-    }
-
-    @Test
-    void parsesRailML34WithExplicitVersion() throws Exception {
-        String xml = """
-                <railML xmlns="https://www.railml.org/schemas/3.4" version="3.4"/>
-                """;
-
-        ParsedRailML parsed = parser.parse(
-                new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
-                RailMLVersion.V3_4_RC);
-
-        assertEquals(RailMLVersion.V3_4_RC, parsed.version());
-        assertInstanceOf(ro.apanescu.railml.generated.v34.RailML.class, parsed.value());
     }
 
     @Test
     void usesCallerSelectedVersionEvenWhenXmlNamespaceDiffers() throws Exception {
         String document = """
-                <railML xmlns="https://www.railml.org/schemas/3.4" version="3.4"/>
+                <railML xmlns="urn:example:unsupported-railml-version" version="99.0"/>
                 """;
 
         ParsedRailML parsed = parser.parse(xml(document), RailMLVersion.V3_2_SR4);

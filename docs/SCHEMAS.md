@@ -2,23 +2,23 @@
 
 ## Required local files
 
-Schema distributions are external, licensed build inputs. Obtain each distribution under
-its applicable terms, then retain its directory structure and place it in these exact
-locations:
+The only currently supported schema distribution is RailML 3.2-SR4. Obtain it under its
+applicable terms, then retain its directory structure and place it in this location:
 
 ```text
 src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd
 src/main/resources/railML-3-2-SR4/source/schema/common3.xsd
 ...all included RailML 3.2-SR4 XSDs and subdirectories...
-
-src/main/resources/railML-3-4-RC/source/schema/railml3.xsd
-src/main/resources/railML-3-4-RC/source/schema/common3.xsd
-...all included RailML 3.4-RC XSDs and subdirectories...
 ```
 
-The build entry points are `railml3.xsd` in each version's schema folder. The schemas
-include other files by relative paths, so do not flatten, rename, or partially copy the
-directory tree. The directories are ignored by Git. Never force-add schema files.
+The build entry point is `railml3.xsd`. Its included schemas use relative paths, so do not
+flatten, rename, or partially copy the directory tree. The directory is ignored by Git.
+Never force-add schema files.
+
+RailML 3.4-RC support is intentionally removed: the distribution describes itself as a
+development release that must not be used productively, and the project's rights to
+generate and redistribute bindings have not been clarified. Reconsider adding it only
+after an official release is available and RailML.org confirms the applicable terms.
 
 Verify a local file is ignored before staging work:
 
@@ -28,14 +28,17 @@ git check-ignore -v src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd
 
 ## CI schema archive
 
-When full GitHub Actions builds are enabled, the private ZIP archive must have these
-version directories at the ZIP root:
+The current workflow uses a private ZIP as its transport mechanism; this is not a claim
+that the schemas themselves must be confidential. If official schema files can be
+retrieved directly by the GitHub runner, a future workflow may fetch the complete required
+tree from RailML instead, provided it respects registration, license, and include-path
+requirements. In either case, keep schema files out of Git and release artifacts.
+
+When full GitHub Actions builds are enabled, the private ZIP archive must have this
+version directory at the ZIP root:
 
 ```text
 railML-3-2-SR4/
-  source/schema/railml3.xsd
-  source/schema/...
-railML-3-4-RC/
   source/schema/railml3.xsd
   source/schema/...
 ```
@@ -47,9 +50,9 @@ Preserve all relative paths used by XSD includes. Configure a repository secret
 documentation. CI downloads and extracts the archive into its ephemeral runner workspace;
 the workflow does not upload the schemas as artifacts.
 
-The CI job checks for each entry-point XSD before copying the two version folders into
-their ignored build locations. A missing file, unavailable URL, invalid token, or archive
-with the wrong layout should fail the schema-dependent build.
+The CI job checks for the entry-point XSD before copying the version folder into its
+ignored build location. A missing file, unavailable URL, invalid token, or archive with
+the wrong layout should fail the schema-dependent build.
 
 ## Exclusions from distribution
 
@@ -65,10 +68,10 @@ before enabling releases.
 ## Licensing notes
 
 The project does not select or grant a license for the original Java code. RailML
-distributions also have their own licensing and usage requirements. The provided
-3.2-SR4 and 3.4-RC source distributions may impose different conditions; 3.4-RC is a
-development release and may not be suitable for productive use. Consult the current terms
-from RailML and obtain any required registrations, approvals, or permissions.
+distributions also have their own licensing and usage requirements. The 3.2-SR4
+distribution has additional terms, including registration/certification requirements.
+Consult the current terms from RailML and obtain any required registrations, approvals,
+or permissions.
 
 Do not add schema bundles to GitHub Releases, Maven repositories, container images,
 documentation examples, or other deliverables unless the applicable terms expressly allow

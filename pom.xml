@@ -133,21 +133,6 @@
               </xjbSources>
             </configuration>
           </execution>
-          <execution>
-            <id>xjc-34</id>
-            <goals>
-              <goal>xjc</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>target/generated-sources/jaxb/v34</outputDirectory>
-              <sources>
-                <source>src/main/resources/railML-3-4-RC/source/schema/railml3.xsd</source>
-              </sources>
-              <xjbSources>
-                <xjbSource>src/main/xjb/railml-3-4.xjb</xjbSource>
-              </xjbSources>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
       <plugin>

@@ -27,7 +27,7 @@ In the repository's **Settings → Secrets and variables → Actions**, configur
 | Name | Type | Value |
 |---|---|---|
 | `RAILML_CI_ENABLED` | Repository variable | Exact text `true` |
-| `RAILML_SCHEMA_ARCHIVE_URL` | Repository secret | URL of the private ZIP containing both schema distributions |
+| `RAILML_SCHEMA_ARCHIVE_URL` | Repository secret | URL of the private ZIP containing the RailML 3.2-SR4 schema distribution |
 | `RAILML_SCHEMA_ARCHIVE_TOKEN` | Repository secret | Read-only bearer token accepted by the archive host |
 
 The archive layout and local schema terms are detailed in
@@ -36,13 +36,21 @@ generation, compilation, tests, and Javadoc checks are skipped. When enabled, mi
 secrets or a malformed archive fail the job rather than silently falling back to partial
 validation.
 
+The private archive is the current CI transport choice, not a requirement that RailML
+schemas be confidential. If the official RailML schema URLs are accessible to the runner,
+CI could instead download the complete 3.2 schema tree directly. Any such change must
+preserve relative include paths and comply with RailML's registration and license
+conditions. Public URL accessibility does not grant additional rights or permit copying
+schemas into the repository or release artifacts.
+
 ## Release controls
 
 Before publishing a release:
 
 1. Confirm and document the project's code license.
 2. Confirm that use and distribution of generated classes are allowed by the relevant
-   RailML terms. Check each schema version independently; 3.4-RC is a development release.
+   RailML 3.2-SR4 terms, including any registration, attribution, and certification
+   requirements.
 3. Ensure full CI is enabled and has passed with the licensed schemas.
 4. Set repository variable `RAILML_DISTRIBUTION_APPROVED=true` only after the distribution
    decision has been made.

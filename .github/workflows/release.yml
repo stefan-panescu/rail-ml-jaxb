@@ -80,12 +80,12 @@ jobs:
           test -f "$binary_jar"
           test -f "$javadoc_jar"
           if ! jar tf "$binary_jar" \
-            | grep -Fxq 'ro/apanescu/railml/generated/v32/RailML.class'; then
+            | grep -Fx 'ro/apanescu/railml/generated/v32/RailML.class' >/dev/null; then
             echo "The binary JAR is missing the RailML 3.2 root model class." >&2
             exit 1
           fi
           if ! jar tf "$javadoc_jar" \
-            | grep -Fxq 'ro/apanescu/railml/parser/RailMLParser.html'; then
+            | grep -Fx 'ro/apanescu/railml/parser/RailMLParser.html' >/dev/null; then
             echo "The Javadoc JAR is missing the documented parser API." >&2
             exit 1
           fi
@@ -93,7 +93,7 @@ jobs:
           for jar_file in \
             "$binary_jar" \
             "$javadoc_jar"; do
-            if jar tf "$jar_file" | grep -Eiq '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$'; then
+            if jar tf "$jar_file" | grep -Ei '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$' >/dev/null; then
               echo "The release JAR unexpectedly contains excluded schema or sample files." >&2
               exit 1
             fi

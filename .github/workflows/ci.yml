@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  windows-wrapper:
+  windows-verify:
     runs-on: windows-latest
     steps:
       - name: Check out source
@@ -29,6 +29,48 @@ jobs:
 
       - name: Validate Maven project with Windows wrapper
         run: .\mvnw.cmd --batch-mode --no-transfer-progress validate
+
+      - name: Restore locally licensed RailML schemas
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        shell: bash
+        env:
+          RAILML_SCHEMA_ARCHIVE_URL: ${{ secrets.RAILML_SCHEMA_ARCHIVE_URL }}
+          RAILML_SCHEMA_ARCHIVE_TOKEN: ${{ secrets.RAILML_SCHEMA_ARCHIVE_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$RAILML_SCHEMA_ARCHIVE_URL"
+          test -n "$RAILML_SCHEMA_ARCHIVE_TOKEN"
+
+          archive="$(mktemp)"
+          schema_dir="$(mktemp -d)"
+          trap 'rm -f "$archive"; rm -rf "$schema_dir"' EXIT
+
+          curl --fail --silent --show-error --location \
+            --header "Authorization: ******" \
+            "$RAILML_SCHEMA_ARCHIVE_URL" \
+            --output "$archive"
+          unzip -q "$archive" -d "$schema_dir"
+
+          for version in 3-2-SR4; do
+            test -f "$schema_dir/railML-${version}/source/schema/railml3.xsd"
+            cp -R "$schema_dir/railML-${version}" src/main/resources/
+          done
+
+      - name: Build, test, and generate API Javadocs on Windows
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        run: .\mvnw.cmd --batch-mode --no-transfer-progress clean verify
+
+      - name: Report schema-dependent checks skipped
+        if: ${{ vars.RAILML_CI_ENABLED != 'true' }}
+        run: |
+          @(
+            '## Windows CI checks'
+            ''
+            'Maven metadata validation passed.'
+            ''
+            'Full generation, compilation, tests, and Javadocs were skipped because the locally licensed'
+            'RailML schema archive is not configured. See the README for repository setup.'
+          ) | Add-Content -Path $env:GITHUB_STEP_SUMMARY
 
   verify:
     runs-on: ubuntu-latest

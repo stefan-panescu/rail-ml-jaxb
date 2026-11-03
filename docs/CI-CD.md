@@ -6,15 +6,16 @@ The repository defines two GitHub Actions workflows:
 
 | Workflow | Trigger | Behavior |
 |---|---|---|
-| `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Validates Maven metadata on Linux and Windows; runs schema-dependent `clean verify` on Linux only when explicitly enabled |
+| `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Validates Maven metadata on Linux and Windows; runs schema-dependent `clean verify` on both platforms only when explicitly enabled |
 | `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs plus a SHA-256 manifest only when distribution approval is enabled and the protected environment allows the job |
 
 Both workflows use the repository's Maven Wrapper, which pins Maven 3.10.0 and verifies
 the downloaded distribution checksum. GitHub Actions are pinned to full commit hashes,
-and Dependabot checks them weekly. CI runs with Java 17 and Maven caching. With full checks
-disabled, a green run confirms Maven metadata validation through both the Linux and
-Windows wrappers; it does not mean sources compiled, tests passed, or Javadocs were
-generated. The Linux job summary makes this skipped state explicit.
+and Dependabot checks them weekly. CI runs with Java 17 and Maven caching. When
+`RAILML_CI_ENABLED` is exactly `true`, it restores the licensed schemas and runs generation,
+compilation, tests, and Javadocs on both Linux and Windows. Otherwise, a green run confirms
+Maven metadata validation through both wrappers but does not mean sources compiled, tests
+passed, or Javadocs were generated; both jobs report the skipped checks in their summaries.
 
 Dependabot checks Maven dependencies/plugins and GitHub Actions references weekly and opens
 update pull requests. Review the changelog and compatibility impact rather than merging

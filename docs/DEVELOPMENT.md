@@ -4,8 +4,8 @@
 
 - Java Development Kit 17 or newer.
 - Maven installed and available as `mvn`.
-- The licensed RailML schema distributions for both configured versions, placed as
-  described in [Schema setup and licensing](SCHEMAS.md).
+- The RailML 3.2-SR4 schema distribution, obtained under its applicable terms and
+  placed at the path described in [Schema setup and licensing](SCHEMAS.md).
 - Optional: `actionlint` for validating GitHub Actions workflow files.
 
 The repository does not include a Maven wrapper. On Windows, run the same Maven commands

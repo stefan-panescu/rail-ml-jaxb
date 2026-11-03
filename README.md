@@ -101,8 +101,26 @@ to the generated root class. Add parser tests for the new version, then run `mvn
 
 The repository is `https://github.com/stefan-panescu/rail-ml-jaxb`. Push the source to that
 repository and create a GitHub Release from a version tag after a successful local
-`mvn clean verify`. A clean checkout needs the licensed schema distributions listed above
-before the build can run, so do not configure a public CI job to fetch or publish those files.
+`mvn clean verify`. The build generates API Javadocs in `target/reports/apidocs` and attaches
+a Javadoc JAR alongside the library JAR.
+
+The GitHub Actions CI workflow always validates Maven metadata. To enable full compilation,
+tests, and Javadocs on GitHub-hosted runners, configure these repository settings:
+
+* Repository variable `RAILML_CI_ENABLED=true`.
+* Repository secret `RAILML_SCHEMA_ARCHIVE_URL`, pointing to a privately hosted ZIP.
+* Repository secret `RAILML_SCHEMA_ARCHIVE_TOKEN`, a read-only token for that archive.
+
+The ZIP must contain both directories at its root:
+`railML-3-2-SR4/source/schema/...` and `railML-3-4-RC/source/schema/...`, retaining all
+relative paths. Host schema distributions only where their license permits; the workflow
+uses them transiently and does not upload them as artifacts.
+
+The release workflow attaches the library and Javadoc JARs to a published GitHub Release only when
+repository variable `RAILML_DISTRIBUTION_APPROVED=true` is set. Before enabling it, confirm
+that distribution of both the project code and schema-derived generated classes is allowed.
+Configure a protected GitHub environment named `release` with required reviewers. Both JARs
+are checked to ensure they do not contain schema files.
 
 To push the current branch to a newly created GitHub repository:
 

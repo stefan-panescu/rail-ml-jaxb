@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Validate Maven project
+        run: mvn --batch-mode --no-transfer-progress validate
+
+      - name: Restore locally licensed RailML schemas
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        env:
+          RAILML_SCHEMA_ARCHIVE_URL: ${{ secrets.RAILML_SCHEMA_ARCHIVE_URL }}
+          RAILML_SCHEMA_ARCHIVE_TOKEN: ${{ secrets.RAILML_SCHEMA_ARCHIVE_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$RAILML_SCHEMA_ARCHIVE_URL"
+          test -n "$RAILML_SCHEMA_ARCHIVE_TOKEN"
+
+          archive="$(mktemp)"
+          schema_dir="$(mktemp -d)"
+          trap 'rm -f "$archive"; rm -rf "$schema_dir"' EXIT
+
+          curl --fail --silent --show-error --location \
+            --header "Authorization: Bearer ${RAILML_SCHEMA_ARCHIVE_TOKEN}" \
+            "$RAILML_SCHEMA_ARCHIVE_URL" \
+            --output "$archive"
+          unzip -q "$archive" -d "$schema_dir"
+
+          for version in 3-2-SR4 3-4-RC; do
+            test -f "$schema_dir/railML-${version}/source/schema/railml3.xsd"
+            cp -R "$schema_dir/railML-${version}" src/main/resources/
+          done
+
+      - name: Build, test, and generate API Javadocs
+        if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
+        run: mvn --batch-mode --no-transfer-progress clean verify
+
+      - name: Report schema-dependent checks skipped
+        if: ${{ vars.RAILML_CI_ENABLED != 'true' }}
+        run: |
+          {
+            echo '## CI checks'
+            echo
+            echo 'Maven metadata validation passed.'
+            echo
+            echo 'Full compilation, tests, and Javadocs were skipped because the locally licensed'
+            echo 'RailML schema archive is not configured. See the README for repository setup.'
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -11,7 +11,23 @@ import java.io.InputStream;
 import javax.xml.stream.XMLStreamException;
 import jakarta.xml.bind.JAXBException;
 
+/**
+ * Demonstrates parsing the sample RailML 3.2 document and reading common organizational units.
+ */
 public class MyParser {
+    /**
+     * Creates the sample parser.
+     */
+    public MyParser() {
+    }
+
+    /**
+     * Parses the sample resource and prints the identifiers and codes of its organizational units.
+     *
+     * @throws IOException if the sample resource cannot be found or read
+     * @throws JAXBException if JAXB cannot bind the sample document
+     * @throws XMLStreamException if the sample XML is malformed
+     */
     public void execute() throws IOException, JAXBException, XMLStreamException {
         try (InputStream input = getClass().getResourceAsStream("/sample.xml")) {
             if (input == null) {

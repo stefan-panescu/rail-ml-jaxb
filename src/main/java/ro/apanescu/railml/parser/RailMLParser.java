@@ -4,10 +4,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +12,37 @@ import java.nio.file.Path;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
+/**
+ * Parses RailML XML into the generated JAXB model for a caller-selected schema version.
+ *
+ * <p>The parser does not perform XSD validation. It disables DTD processing and external
+ * entity resolution while reading XML.</p>
+ */
 public final class RailMLParser {
     private static final Map<RailMLVersion, JAXBContext> CONTEXTS = createContexts();
 
+    /**
+     * Creates a parser backed by the JAXB contexts for all supported RailML versions.
+     */
+    public RailMLParser() {
+    }
+
+    /**
+     * Parses a RailML document from a file.
+     *
+     * @param xmlFile XML file to read
+     * @param version schema version used to select the JAXB model
+     * @return the parsed document and selected version
+     * @throws IOException if the file cannot be opened or read
+     * @throws JAXBException if JAXB cannot bind the document
+     * @throws XMLStreamException if the XML is malformed or its root is not {@code railML}
+     * @throws NullPointerException if {@code xmlFile} or {@code version} is {@code null}
+     */
     public ParsedRailML parse(Path xmlFile, RailMLVersion version)
             throws IOException, JAXBException, XMLStreamException {
         Objects.requireNonNull(xmlFile, "xmlFile");
@@ -29,6 +52,19 @@ public final class RailMLParser {
         }
     }
 
+    /**
+     * Parses a RailML document from an input stream.
+     *
+     * <p>The caller retains ownership of {@code input}; this method does not close it. The
+     * supplied version is trusted and is not checked against the XML namespace.</p>
+     *
+     * @param input XML input stream
+     * @param version schema version used to select the JAXB model
+     * @return the parsed document and selected version
+     * @throws JAXBException if JAXB cannot bind the document
+     * @throws XMLStreamException if the XML is malformed or its root is not {@code railML}
+     * @throws NullPointerException if {@code input} or {@code version} is {@code null}
+     */
     public ParsedRailML parse(InputStream input, RailMLVersion version)
             throws JAXBException, XMLStreamException {
         Objects.requireNonNull(input, "input");
@@ -41,7 +77,7 @@ public final class RailMLParser {
         XMLStreamReader reader = factory.createXMLStreamReader(new FilterInputStream(input) {
             @Override
             public void close() {
-                // Closing the XML reader must not close the caller-owned input stream.
+                // The caller owns the original input stream.
             }
         });
         try {

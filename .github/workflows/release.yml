@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish-jar:
+    if: ${{ vars.RAILML_DISTRIBUTION_APPROVED == 'true' }}
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Restore locally licensed RailML schemas
+        env:
+          RAILML_SCHEMA_ARCHIVE_URL: ${{ secrets.RAILML_SCHEMA_ARCHIVE_URL }}
+          RAILML_SCHEMA_ARCHIVE_TOKEN: ${{ secrets.RAILML_SCHEMA_ARCHIVE_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$RAILML_SCHEMA_ARCHIVE_URL"
+          test -n "$RAILML_SCHEMA_ARCHIVE_TOKEN"
+
+          archive="$(mktemp)"
+          schema_dir="$(mktemp -d)"
+          trap 'rm -f "$archive"; rm -rf "$schema_dir"' EXIT
+
+          curl --fail --silent --show-error --location \
+            --header "Authorization: Bearer ${RAILML_SCHEMA_ARCHIVE_TOKEN}" \
+            "$RAILML_SCHEMA_ARCHIVE_URL" \
+            --output "$archive"
+          unzip -q "$archive" -d "$schema_dir"
+
+          for version in 3-2-SR4 3-4-RC; do
+            test -f "$schema_dir/railML-${version}/source/schema/railml3.xsd"
+            cp -R "$schema_dir/railML-${version}" src/main/resources/
+          done
+
+      - name: Build and verify release
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          version="${RELEASE_VERSION#v}"
+          mvn --batch-mode --no-transfer-progress \
+            "-Drevision=${version}" clean verify
+
+      - name: Ensure licensed schemas are not in the JAR
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="${RELEASE_VERSION#v}"
+          for jar_file in \
+            "target/rail-ml-jaxb-${version}.jar" \
+            "target/rail-ml-jaxb-${version}-javadoc.jar"; do
+            test -f "$jar_file"
+            if jar tf "$jar_file" | grep -E '(^|/)[^/]+\.xsd$|^railML[^/]+/'; then
+              echo "The release JAR unexpectedly contains schema files." >&2
+              exit 1
+            fi
+          done
+
+      - name: Attach JAR to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          version="${RELEASE_VERSION#v}"
+          gh release upload "$RELEASE_VERSION" \
+            "target/rail-ml-jaxb-${version}.jar" \
+            "target/rail-ml-jaxb-${version}-javadoc.jar"

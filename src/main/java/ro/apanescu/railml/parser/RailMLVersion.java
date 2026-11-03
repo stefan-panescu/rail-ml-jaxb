@@ -1,8 +1,13 @@
 package ro.apanescu.railml.parser;
 
+/**
+ * RailML schema distributions for which this library generates JAXB models.
+ */
 public enum RailMLVersion {
+    /** RailML 3.2 Service Release 4. */
     V3_2_SR4("3.2-SR4", "https://www.railml.org/schemas/3.2",
             ro.apanescu.railml.generated.v32.RailML.class),
+    /** RailML 3.4 Release Candidate. */
     V3_4_RC("3.4-RC", "https://www.railml.org/schemas/3.4",
             ro.apanescu.railml.generated.v34.RailML.class);
 
@@ -10,16 +15,26 @@ public enum RailMLVersion {
     private final String namespace;
     private final Class<?> documentType;
 
-    RailMLVersion(String label, String namespace, Class<?> documentType) {
+    private RailMLVersion(String label, String namespace, Class<?> documentType) {
         this.label = label;
         this.namespace = namespace;
         this.documentType = documentType;
     }
 
+    /**
+     * Returns the display label for this schema distribution.
+     *
+     * @return version label
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     * Returns the XML namespace associated with this schema distribution.
+     *
+     * @return XML namespace URI
+     */
     public String getNamespace() {
         return namespace;
     }
@@ -27,5 +42,4 @@ public enum RailMLVersion {
     Class<?> getDocumentType() {
         return documentType;
     }
-
 }

@@ -5,7 +5,7 @@
 
   <groupId>ro.apanescu</groupId>
   <artifactId>rail-ml-jaxb</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>${revision}</version>
 
   <name>RailML JAXB</name>
   <description>Version-specific JAXB models and parser for RailML XML documents.</description>
@@ -20,6 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <revision>0.1.0-SNAPSHOT</revision>
   </properties>
 
   <dependencyManagement>
@@ -149,7 +150,26 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.11.2</version>
+        <configuration>
+          <excludePackageNames>ro.apanescu.railml.generated.*</excludePackageNames>
+          <failOnError>true</failOnError>
+          <failOnWarnings>true</failOnWarnings>
+        </configuration>
+        <executions>
+          <execution>
+            <id>api-javadocs</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>javadoc</goal>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
 
   </build>

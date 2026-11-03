@@ -10,9 +10,9 @@ The parser accepts a file path or an input stream. `parse(InputStream, ...)` doe
 the stream; the caller remains responsible for closing it.
 
 ```java
-import org.railml.parser.ParsedRailML;
-import org.railml.parser.RailMLParser;
-import org.railml.parser.RailMLVersion;
+import ro.apanescu.railml.parser.ParsedRailML;
+import ro.apanescu.railml.parser.RailMLParser;
+import ro.apanescu.railml.parser.RailMLVersion;
 
 import java.nio.file.Path;
 
@@ -21,7 +21,7 @@ ParsedRailML parsed = new RailMLParser().parse(
     RailMLVersion.V3_2_SR4
 );
 
-var railML = parsed.valueAs(org.railml.generated.v32.RailML.class);
+var railML = parsed.valueAs(ro.apanescu.railml.generated.v32.RailML.class);
 var units = railML.getCommon().getOrganizationalUnits().getOrganizationalUnit();
 units.forEach(unit -> System.out.println(unit.getId()));
 ```
@@ -34,7 +34,7 @@ import java.nio.file.Path;
 
 try (var input = Files.newInputStream(Path.of("network.xml"))) {
     ParsedRailML parsed = new RailMLParser().parse(input, RailMLVersion.V3_4_RC);
-    var railML = parsed.valueAs(org.railml.generated.v34.RailML.class);
+    var railML = parsed.valueAs(ro.apanescu.railml.generated.v34.RailML.class);
 }
 ```
 
@@ -81,7 +81,7 @@ Then add this dependency:
 
 ```xml
 <dependency>
-  <groupId>io.github.stefan-panescu</groupId>
+  <groupId>ro.apanescu</groupId>
   <artifactId>rail-ml-jaxb</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>

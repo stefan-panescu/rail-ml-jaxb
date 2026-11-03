@@ -1,10 +1,10 @@
-package org.railml.parser;
+package ro.apanescu.railml.parser;
 
 public enum RailMLVersion {
     V3_2_SR4("3.2-SR4", "https://www.railml.org/schemas/3.2",
-            org.railml.generated.v32.RailML.class),
+            ro.apanescu.railml.generated.v32.RailML.class),
     V3_4_RC("3.4-RC", "https://www.railml.org/schemas/3.4",
-            org.railml.generated.v34.RailML.class);
+            ro.apanescu.railml.generated.v34.RailML.class);
 
     private final String label;
     private final String namespace;

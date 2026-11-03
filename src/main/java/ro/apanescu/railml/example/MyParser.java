@@ -1,10 +1,10 @@
-package org.example.pt2;
+package ro.apanescu.railml.example;
 
-import org.railml.generated.v32.OrganizationalUnit;
-import org.railml.generated.v32.RailML;
-import org.railml.parser.ParsedRailML;
-import org.railml.parser.RailMLParser;
-import org.railml.parser.RailMLVersion;
+import ro.apanescu.railml.generated.v32.OrganizationalUnit;
+import ro.apanescu.railml.generated.v32.RailML;
+import ro.apanescu.railml.parser.ParsedRailML;
+import ro.apanescu.railml.parser.RailMLParser;
+import ro.apanescu.railml.parser.RailMLVersion;
 
 import java.io.IOException;
 import java.io.InputStream;

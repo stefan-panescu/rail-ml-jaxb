@@ -1,4 +1,4 @@
-package org.railml.parser;
+package ro.apanescu.railml.parser;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

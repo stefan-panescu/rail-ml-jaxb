@@ -5,7 +5,7 @@
   <jaxb:bindings schemaLocation="../resources/railML-3-4-RC/source/schema/railml3.xsd"
                  node="/xs:schema">
     <jaxb:schemaBindings>
-      <jaxb:package name="org.railml.generated.v34"/>
+      <jaxb:package name="ro.apanescu.railml.generated.v34"/>
     </jaxb:schemaBindings>
   </jaxb:bindings>
   <jaxb:bindings schemaLocation="../resources/railML-3-4-RC/source/schema/interlocking3.xsd"
@@ -15,16 +15,22 @@
       <jaxb:property name="logicDescription"/>
     </jaxb:bindings>
   </jaxb:bindings>
+  <jaxb:bindings schemaLocation="../resources/railML-3-4-RC/source/schema/gml/gml4railml3.xsd"
+                 node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ro.apanescu.railml.generated.v34.gml"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
   <jaxb:bindings schemaLocation="https://www.dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd"
                  node="/xs:schema">
     <jaxb:schemaBindings>
-      <jaxb:package name="org.railml.generated.v34.dublinCore"/>
+      <jaxb:package name="ro.apanescu.railml.generated.v34.dublinCore"/>
     </jaxb:schemaBindings>
   </jaxb:bindings>
   <jaxb:bindings schemaLocation="https://dublincore.org/schemas/xmls/qdc/2008/02/11/dcterms.xsd"
                  node="/xs:schema">
     <jaxb:schemaBindings>
-      <jaxb:package name="org.railml.generated.v34.dublinCoreTerms"/>
+      <jaxb:package name="ro.apanescu.railml.generated.v34.dublinCoreTerms"/>
     </jaxb:schemaBindings>
   </jaxb:bindings>
 </jaxb:bindings>

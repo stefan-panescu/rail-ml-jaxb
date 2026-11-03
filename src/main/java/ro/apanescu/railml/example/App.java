@@ -1,6 +1,6 @@
-package org.example.cli;
+package ro.apanescu.railml.example;
 
-import org.example.pt2.MyParser;
+import ro.apanescu.railml.example.MyParser;
 
 import jakarta.xml.bind.JAXBException;
 import java.io.IOException;

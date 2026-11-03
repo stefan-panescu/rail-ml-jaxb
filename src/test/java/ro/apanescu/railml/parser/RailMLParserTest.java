@@ -1,4 +1,4 @@
-package org.railml.parser;
+package ro.apanescu.railml.parser;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class RailMLParserTest {
             ParsedRailML parsed = parser.parse(input, RailMLVersion.V3_2_SR4);
 
             assertEquals(RailMLVersion.V3_2_SR4, parsed.version());
-            var railML = assertInstanceOf(org.railml.generated.v32.RailML.class, parsed.value());
+            var railML = assertInstanceOf(ro.apanescu.railml.generated.v32.RailML.class, parsed.value());
             assertEquals("co_01", railML.getCommon().getId());
             assertEquals(4, railML.getCommon().getOrganizationalUnits()
                     .getOrganizationalUnit().size());
@@ -38,7 +38,7 @@ class RailMLParserTest {
                 RailMLVersion.V3_4_RC);
 
         assertEquals(RailMLVersion.V3_4_RC, parsed.version());
-        assertInstanceOf(org.railml.generated.v34.RailML.class, parsed.value());
+        assertInstanceOf(ro.apanescu.railml.generated.v34.RailML.class, parsed.value());
     }
 
     @Test

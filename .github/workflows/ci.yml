@@ -28,7 +28,7 @@ jobs:
           cache: maven
 
       - name: Validate Maven project
-        run: mvn --batch-mode --no-transfer-progress validate
+        run: ./mvnw --batch-mode --no-transfer-progress validate
 
       - name: Restore locally licensed RailML schemas
         if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
@@ -57,7 +57,7 @@ jobs:
 
       - name: Build, test, and generate API Javadocs
         if: ${{ vars.RAILML_CI_ENABLED == 'true' }}
-        run: mvn --batch-mode --no-transfer-progress clean verify
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Report schema-dependent checks skipped
         if: ${{ vars.RAILML_CI_ENABLED != 'true' }}

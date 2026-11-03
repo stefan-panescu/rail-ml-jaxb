@@ -3,20 +3,20 @@
 ## Prerequisites
 
 - Java Development Kit 17 or newer.
-- Maven installed and available as `mvn`.
+- Network access to download the Maven distribution and project dependencies.
 - The RailML 3.2-SR4 schema distribution, obtained under its applicable terms and
   placed at the path described in [Schema setup and licensing](SCHEMAS.md).
 - Optional: `actionlint` for validating GitHub Actions workflow files.
 
-The repository does not include a Maven wrapper. On Windows, run the same Maven commands
-from PowerShell or Command Prompt; on other platforms, use a shell with Maven on `PATH`.
+Use `./mvnw` on Linux/macOS, or `.\mvnw.cmd` in Windows PowerShell or Command Prompt.
+The wrapper pins Maven 3.10.0, so a separate Maven installation is not needed.
 
 ## First local build
 
 After obtaining and placing the schema sets:
 
 ```shell
-mvn clean verify
+./mvnw clean verify
 ```
 
 This cleans prior output, generates the JAXB sources, compiles code, runs tests, and
@@ -26,14 +26,14 @@ Build outputs go under `target/` and are ignored by Git.
 To install the artifact in the local Maven repository for use by another local project:
 
 ```shell
-mvn install
+./mvnw install
 ```
 
 To build a non-snapshot version locally (for example, to check release version
 interpolation):
 
 ```shell
-mvn -Drevision=0.1.0 clean verify
+./mvnw -Drevision=0.1.0 clean verify
 ```
 
 ## Typical change flow
@@ -43,7 +43,7 @@ mvn -Drevision=0.1.0 clean verify
    parser, generated model setup, or version support.
 3. Implement the smallest complete change. Add or update tests and documentation when
    behavior, supported versions, setup, CI, or release procedure changes.
-4. Run `mvn clean verify` with the local schema inputs. For workflow changes, run
+4. Run `./mvnw clean verify` with the local schema inputs. For workflow changes, run
    `actionlint` if available. Also run `git diff --check`.
 5. Review the diff and status. Confirm no schema files, credentials, generated build
    output, or unrelated edits are included.
@@ -57,16 +57,18 @@ specifically requested and authorized.
 
 | Command | Purpose |
 |---|---|
-| `mvn validate` | Validate Maven project metadata; does not compile or run tests |
-| `mvn clean test` | Generate/compile sources and run tests |
-| `mvn clean verify` | Full local verification, including Javadocs |
-| `mvn -Drevision=0.1.0 clean verify` | Verify a release-style version |
-| `mvn install` | Install the built artifact in the local Maven repository |
+| `./mvnw validate` | Validate Maven project metadata; does not compile or run tests |
+| `./mvnw clean test` | Generate/compile sources and run tests |
+| `./mvnw clean verify` | Full local verification, including Javadocs |
+| `./mvnw -Drevision=0.1.0 clean verify` | Verify a release-style version |
+| `./mvnw install` | Install the built artifact in the local Maven repository |
 | `git diff --check` | Detect whitespace errors in the working diff |
 | `git check-ignore -v src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd` | Confirm a local schema file is ignored |
 
+On Windows, substitute `.\mvnw.cmd` for `./mvnw` in the Maven commands above.
+
 The schema-dependent Maven commands require the licensed local schema sets. Without those
-inputs, `mvn validate` can still check project metadata, but it does not demonstrate that
+inputs, `./mvnw validate` can still check project metadata, but it does not demonstrate that
 XJC generation, compilation, tests, or Javadocs succeed.
 
 ## Tests and fixtures

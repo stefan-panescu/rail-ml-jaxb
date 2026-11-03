@@ -233,7 +233,10 @@ build/
 ### Mac OS ###
 .DS_Store
 
-/.mvn/
+/.mvn/*
+!/.mvn/wrapper/
+/.mvn/wrapper/*
+!/.mvn/wrapper/maven-wrapper.properties
 
 # RailML schema distributions are licensed separately and must not be committed.
 /src/main/resources/railML*/

@@ -63,7 +63,7 @@ The `valueAs` method rejects a root class that does not match the selected versi
   unmarshaller and XML reader.
 
 The API is documented with Javadoc. Locally generated HTML is written to
-`target/reports/apidocs`; `mvn verify` also attaches a Javadoc JAR.
+`target/reports/apidocs`; `./mvnw verify` also attaches a Javadoc JAR.
 
 ## Generated package and binding conventions
 
@@ -95,7 +95,7 @@ distribution, the applicable binding file, or the XJC configuration and regenera
    rather than production resources.
 6. Update the version matrix, schema archive setup, CI/release workflows as needed, and
    the README and roadmap.
-7. With all required schema inputs locally available, run `mvn clean verify` and inspect
+7. With all required schema inputs locally available, run `./mvnw clean verify` and inspect
    both JARs to ensure they contain no schema files.
 
 Do not combine independent RailML schema versions into one XJC invocation without

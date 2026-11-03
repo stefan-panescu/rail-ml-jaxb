@@ -65,7 +65,7 @@ jobs:
           RELEASE_VERSION: ${{ github.ref_name }}
         run: |
           version="${RELEASE_VERSION#v}"
-          mvn --batch-mode --no-transfer-progress \
+          ./mvnw --batch-mode --no-transfer-progress \
             "-Drevision=${version}" clean verify
 
       - name: Ensure licensed schemas are not in the JAR

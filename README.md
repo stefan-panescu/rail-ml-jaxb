@@ -30,12 +30,14 @@ the caller owns and closes it. See [the API and architecture guide](docs/ARCHITE
 
 ## Build and use locally
 
-Requires Java 17+, Maven, and the licensed schema inputs described in
+Requires Java 17+ and the RailML 3.2-SR4 schema inputs described in
 [Schema setup and licensing](docs/SCHEMAS.md).
+The Maven Wrapper downloads the project's pinned Maven version on first use; an existing
+Maven installation is not required. On Windows, use `.\mvnw.cmd` instead of `./mvnw`.
 
 ```shell
-mvn clean verify
-mvn install
+./mvnw clean verify
+./mvnw install
 ```
 
 After installing the artifact locally, use this dependency:
@@ -58,7 +60,7 @@ run `ro.apanescu.railml.example.App` with a runtime classpath and set that argum
 path of a RailML document. To launch it through Maven:
 
 ```shell
-mvn -q "-Dexec.mainClass=ro.apanescu.railml.example.App" "-Dexec.args=<path-to-xml>" org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+./mvnw -q "-Dexec.mainClass=ro.apanescu.railml.example.App" "-Dexec.args=<path-to-xml>" org.codehaus.mojo:exec-maven-plugin:3.5.0:java
 ```
 
 ## Project documentation

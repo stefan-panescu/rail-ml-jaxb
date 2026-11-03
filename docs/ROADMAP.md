@@ -103,7 +103,8 @@ contents, and a documented consumer-facing installation instruction. The release
 workflow now attaches a SHA-256 manifest for both JARs and checks that schema and sample
 files are excluded. It also rejects tags that do not match `vMAJOR.MINOR.PATCH` before
 schema restoration or building, and verifies that the binary and Javadoc JARs contain
-their expected model/API entries.
+their expected model/API entries. The Maven Wrapper pins Maven 3.10.0 and verifies its
+distribution checksum for consistent local and CI builds.
 
 ## Plan maintenance
 

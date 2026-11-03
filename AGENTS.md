@@ -33,9 +33,10 @@ the root [README](README.md), especially [development](docs/DEVELOPMENT.md),
   setup, or release procedures change.
 - Add or update tests for behavior changes. For changes that touch parser behavior, cover
   version selection, errors, and input-stream ownership where relevant.
-- Run `mvn clean verify` when the required local schemas are available. Otherwise, state
-  clearly that the schema-dependent build could not be run; do not imply that `mvn validate`
-  proves compilation or tests pass.
+- Run `./mvnw clean verify` (or `.\mvnw.cmd clean verify` on Windows) when the required
+  local schemas are available. Otherwise, state clearly that the schema-dependent build
+  could not be run; do not imply that Maven metadata validation proves compilation or
+  tests pass.
 - Check workflow YAML with `actionlint` when available and run `git diff --check`.
 - Do not publish a release or enable distribution gates without explicit user approval.
 - Report exactly which checks ran and any prerequisites or checks that remain outstanding.

@@ -9,15 +9,17 @@ The repository defines two GitHub Actions workflows:
 | `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Always runs Maven metadata validation; runs schema-dependent `clean verify` only when explicitly enabled |
 | `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs plus a SHA-256 manifest only when distribution approval is enabled and the protected environment allows the job |
 
-The CI workflow runs with Java 17 and Maven caching. A green run with full checks disabled
-means only `mvn validate` passed; it does not mean sources compiled, tests passed, or
-Javadocs were generated. The job summary makes this skipped state explicit.
+Both workflows use the repository's Maven Wrapper, which pins Maven 3.10.0 and verifies
+the downloaded distribution checksum. CI runs with Java 17 and Maven caching. A green run
+with full checks disabled means only `./mvnw validate` passed; it does not mean sources
+compiled, tests passed, or Javadocs were generated. The job summary makes this skipped
+state explicit.
 
 Dependabot checks Maven dependencies/plugins and GitHub Actions references weekly and opens
 update pull requests. Review the changelog and compatibility impact rather than merging
 updates automatically. The normal CI caveat applies to these PRs too: until the private
 schema archive is configured, GitHub validation does not exercise XJC generation, tests,
-or Javadocs. Run `mvn clean verify` locally with the required schema inputs or enable
+or Javadocs. Run `./mvnw clean verify` locally with the required schema inputs or enable
 schema-dependent CI before merging such updates.
 
 ## Enabling full CI
@@ -62,7 +64,7 @@ Before publishing a release:
 The release workflow runs only for a published release and only if the approval variable
 is exactly `true`. It waits for the `release` environment's protection rules. It restores
 the schema archive, validates the tag format before restoring schemas, runs
-`mvn clean verify` with the leading `v` removed from the GitHub release tag (for example,
+`./mvnw clean verify` with the leading `v` removed from the GitHub release tag (for example,
 tag `v0.1.0` builds Maven version `0.1.0`), checks that the
 binary and Javadoc JARs exist, verifies that they contain the RailML 3.2 root model and
 documented parser API respectively, and rejects schema/sample files in either archive.

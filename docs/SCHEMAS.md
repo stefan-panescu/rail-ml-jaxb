@@ -73,6 +73,20 @@ distribution has additional terms, including registration/certification requirem
 Consult the current terms from RailML and obtain any required registrations, approvals,
 or permissions.
 
+RailML.org's schema page says users must accept the license and register before
+downloading schemas, and that certification is a prerequisite for productive use. The
+RailML.org site also asks that it be referenced in software, manuals, and brochures that
+describe RailML capabilities. This repository does not claim that public URL accessibility
+waives those requirements. The legal status of distributing XJC-generated JAXB classes
+remains unconfirmed; keep the release gate disabled until that point is clarified.
+
+Official references:
+
+- [RailML 3.2 schema download page](https://www.railml.org/en/schemas)
+- [RailML license](https://www.railml.org/en/licence)
+- [RailML version timeline](https://www.railml.org/en/version-timeline)
+- [RailML certification](https://www.railml.org/en/certification)
+
 Do not add schema bundles to GitHub Releases, Maven repositories, container images,
 documentation examples, or other deliverables unless the applicable terms expressly allow
 that distribution.

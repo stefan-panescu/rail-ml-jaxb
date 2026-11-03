@@ -11,7 +11,7 @@ the legal or distribution readiness of a release.
 | Version-specific JAXB generation | Implemented | RailML 3.2-SR4 only; 3.4-RC support removed pending release and license clarification |
 | Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
 | Parser tests and Javadocs | Implemented | Parser tests cover both input forms, explicit-version behavior, error cases, resource ownership, and disabled external entities |
-| GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI depends on private schema archive settings |
+| GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI needs schema inputs obtained under RailML's registration and license conditions |
 | Dependency update automation | Implemented | Dependabot checks Maven and GitHub Actions dependencies weekly; updates still require review and schema-enabled verification |
 | Public source-code license | Blocked / undecided | No license has been selected; do not assume public reuse or redistribution is authorized |
 | Generated-class distribution approval | Blocked / undecided | Confirm applicable RailML terms before distributing generated models |
@@ -30,17 +30,27 @@ Only after that decision should the release approval variable be enabled.
 **Done when:** Licensing decisions are recorded in repository documentation, required
 license/notice files are present, and release gates reflect the approved scope.
 
+**Research note:** RailML's current pages identify RailML 3.2 as restricted CC BY-NC-ND
+4.0, require registration before schema downloads, state that certification is required
+for productive use, and require RailML.org attribution in software and descriptions.
+Whether distributing XJC-generated bindings is permitted under these terms has not been
+confirmed. See [Schema setup and licensing](SCHEMAS.md) and its official sources.
+
 ### P1 — Make full CI reproducible on GitHub
 
-**Prerequisites:** A private schema archive host and a read-only token with access for
-GitHub Actions.
+**Prerequisites:** A compliant, stable source for the complete RailML 3.2-SR4 schema
+tree. RailML's site requires acceptance of its terms and registration before schema
+download. The currently configured CI path uses a private archive; direct public URLs
+exist, but should only be used by automation if the required registration and terms are
+satisfied.
 
 **Plan:** Configure the documented CI variable and secrets, run the full workflow on a
 pull request or manual dispatch, and resolve failures in schema restoration, XJC,
 compilation, tests, or Javadocs.
 
-**Done when:** A GitHub Actions run reports all schema-dependent checks passing for the
-intended supported versions, and the archive remains private and absent from artifacts.
+**Done when:** A GitHub Actions run reports XJC generation, compilation, tests, and
+Javadocs passing using the complete, correct 3.2-SR4 schema set obtained under the
+applicable terms, and no schema files are included in build artifacts or uploaded.
 
 ### P2 — Define stable consumer distribution
 

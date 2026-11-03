@@ -13,6 +13,13 @@ The CI workflow runs with Java 17 and Maven caching. A green run with full check
 means only `mvn validate` passed; it does not mean sources compiled, tests passed, or
 Javadocs were generated. The job summary makes this skipped state explicit.
 
+Dependabot checks Maven dependencies/plugins and GitHub Actions references weekly and opens
+update pull requests. Review the changelog and compatibility impact rather than merging
+updates automatically. The normal CI caveat applies to these PRs too: until the private
+schema archive is configured, GitHub validation does not exercise XJC generation, tests,
+or Javadocs. Run `mvn clean verify` locally with the required schema inputs or enable
+schema-dependent CI before merging such updates.
+
 ## Enabling full CI
 
 In the repository's **Settings → Secrets and variables → Actions**, configure:

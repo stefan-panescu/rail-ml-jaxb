@@ -12,6 +12,7 @@ the legal or distribution readiness of a release.
 | Explicit-version parser API | Implemented | Caller selects a version; parser returns the corresponding generated root object |
 | Parser tests and Javadocs | Implemented | Parser tests cover both input forms, explicit-version behavior, error cases, resource ownership, and disabled external entities |
 | GitHub Actions workflows | Implemented, configuration-dependent | CI and release workflows are present; full CI depends on private schema archive settings |
+| Dependency update automation | Implemented | Dependabot checks Maven and GitHub Actions dependencies weekly; updates still require review and schema-enabled verification |
 | Public source-code license | Blocked / undecided | No license has been selected; do not assume public reuse or redistribution is authorized |
 | Generated-class distribution approval | Blocked / undecided | Confirm applicable RailML terms before distributing generated models |
 | Public Maven publication | Not implemented | Current release workflow attaches JARs to GitHub Releases only |

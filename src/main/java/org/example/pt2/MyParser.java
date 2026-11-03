@@ -1,49 +1,39 @@
 package org.example.pt2;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
-import org.railml.schemas._3.*;
+import org.railml.generated.v32.OrganizationalUnit;
+import org.railml.generated.v32.RailML;
+import org.railml.parser.ParsedRailML;
+import org.railml.parser.RailMLParser;
+import org.railml.parser.RailMLVersion;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.stream.Collectors;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.stream.XMLStreamException;
+import jakarta.xml.bind.JAXBException;
 
 public class MyParser {
-    public void execute() throws JAXBException, IOException {
+    public void execute() throws IOException, JAXBException, XMLStreamException {
         try (InputStream input = getClass().getResourceAsStream("/sample.xml")) {
             if (input == null) {
                 throw new IOException("Could not find sample.xml on the classpath");
             }
 
-            JAXBContext context = JAXBContext.newInstance(RailML.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            RailML railML = unmarshaller.unmarshal(new StreamSource(input), RailML.class).getValue();
+            ParsedRailML parsed = new RailMLParser().parse(input, RailMLVersion.V3_2_SR4);
+            System.out.printf("Parsed RailML %s (%s)%n",
+                    parsed.version().getLabel(), parsed.value().getClass().getName());
 
-            if (railML.getCommon() == null) {
-                throw new IllegalStateException("The sample has no common element");
+            RailML railML = parsed.valueAs(RailML.class);
+            if (railML.getCommon() == null
+                    || railML.getCommon().getOrganizationalUnits() == null) {
+                throw new IllegalStateException(
+                        "The sample has no common organizationalUnits element");
             }
 
-            OrganizationalUnits organizationalUnits =
-                    railML.getCommon().getOrganizationalUnits();
-            if (organizationalUnits == null) {
-                throw new IllegalStateException("The common element has no organizationalUnits");
+            System.out.printf("common id=%s%n", railML.getCommon().getId());
+            for (OrganizationalUnit unit
+                    : railML.getCommon().getOrganizationalUnits().getOrganizationalUnit()) {
+                System.out.printf("- id=%s, code=%s%n", unit.getId(), unit.getCode());
             }
-
-            doSomethingElse(railML);
         }
-    }
-
-    private void doSomethingElse(RailML railML) {
-        Interlocking ixl = railML.getInterlocking();
-
-        ixl.getSignalBoxes().getSignalBox().forEach(signalBox -> {
-//            signalBox.
-        });
-    }
-
-    private static String formatName(Name name) {
-        return name.getLanguage() + ":" + name.getName();
     }
 }

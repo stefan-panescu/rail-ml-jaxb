@@ -3,13 +3,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.example</groupId>
-  <artifactId>RailMLmapping</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>io.github.stefan-panescu</groupId>
+  <artifactId>rail-ml-jaxb</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 
-  <name>RailMLmapping</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <name>RailML JAXB</name>
+  <description>Version-specific JAXB models and parser for RailML XML documents.</description>
+  <url>https://github.com/stefan-panescu/rail-ml-jaxb</url>
+
+  <scm>
+    <connection>scm:git:git://github.com/stefan-panescu/rail-ml-jaxb.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/stefan-panescu/rail-ml-jaxb.git</developerConnection>
+    <url>https://github.com/stefan-panescu/rail-ml-jaxb</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,6 +54,14 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>railML*/**</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -71,6 +85,12 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.4.2</version>
+          <configuration>
+            <excludes>
+              <exclude>railML*/**</exclude>
+              <exclude>sample.xml</exclude>
+            </excludes>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -98,21 +118,36 @@
         <version>4.2.0</version>
         <executions>
           <execution>
-            <id>xjc</id>
+            <id>xjc-32</id>
             <goals>
               <goal>xjc</goal>
             </goals>
+            <configuration>
+              <outputDirectory>target/generated-sources/jaxb/v32</outputDirectory>
+              <sources>
+                <source>src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd</source>
+              </sources>
+              <xjbSources>
+                <xjbSource>src/main/xjb/railml-3-2.xjb</xjbSource>
+              </xjbSources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>xjc-34</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/generated-sources/jaxb/v34</outputDirectory>
+              <sources>
+                <source>src/main/resources/railML-3-4-RC/source/schema/railml3.xsd</source>
+              </sources>
+              <xjbSources>
+                <xjbSource>src/main/xjb/railml-3-4.xjb</xjbSource>
+              </xjbSources>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <outputDirectory>target/generated-sources/jaxb</outputDirectory>
-          <sources>
-            <source>src/main/resources/railML-3-2-SR4/source/schema/railml3.xsd</source>
-          </sources>
-          <xjbSources>
-            <xjbSource>src/main/xjb</xjbSource>
-          </xjbSources>
-        </configuration>
       </plugin>
 
     </plugins>

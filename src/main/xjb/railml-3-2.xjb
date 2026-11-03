@@ -2,11 +2,23 @@
 <jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                version="3.0">
+  <jaxb:bindings schemaLocation="../resources/railML-3-2-SR4/source/schema/railml3.xsd"
+                 node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.railml.generated.v32"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
   <jaxb:bindings schemaLocation="../resources/railML-3-2-SR4/source/schema/interlocking3.xsd"
                  node="/xs:schema">
     <jaxb:bindings
         node="xs:complexType[@name='LogicalDevice']/xs:complexContent/xs:extension/xs:attribute[@name='description']">
       <jaxb:property name="logicDescription"/>
     </jaxb:bindings>
+  </jaxb:bindings>
+  <jaxb:bindings schemaLocation="https://dublincore.org/schemas/xmls/qdc/2008/02/11/dc.xsd"
+                 node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="org.railml.generated.v32.dublinCore"/>
+    </jaxb:schemaBindings>
   </jaxb:bindings>
 </jaxb:bindings>

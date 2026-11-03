@@ -235,5 +235,5 @@ build/
 
 /.mvn/
 
-src/main/resources/railML*
-!src/main/resources/railML*/*/.gitkeep
+# RailML schema distributions are licensed separately and must not be committed.
+/src/main/resources/railML*/

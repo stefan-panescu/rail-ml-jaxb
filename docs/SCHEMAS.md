@@ -56,10 +56,12 @@ the wrong layout should fail the schema-dependent build.
 
 ## Exclusions from distribution
 
-Maven excludes `railML*/**` from normal resources and JAR contents. It also excludes
-`sample.xml` from the binary JAR. Generated Java model classes are compiled and included;
-they are derived from the schema inputs and may themselves be subject to RailML terms.
-Both release JARs are checked in the release workflow for schema files before upload.
+Maven excludes `railML*/**` from normal resources and JAR contents. The sample XML fixture
+is stored under `src/test/resources`, so it is available to tests but not copied into
+production classes or the binary JAR. Generated Java model classes are compiled and
+included; they are derived from the schema inputs and may themselves be subject to RailML
+terms. Both release JARs are checked in the release workflow for schema files before
+upload.
 
 Do not treat the absence of `.xsd` files in a JAR as proof that distribution is permitted.
 Review the applicable RailML terms for both the schema distributions and generated classes

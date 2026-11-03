@@ -7,12 +7,12 @@ import ro.apanescu.railml.parser.RailMLParser;
 import ro.apanescu.railml.parser.RailMLVersion;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Path;
 import javax.xml.stream.XMLStreamException;
 import jakarta.xml.bind.JAXBException;
 
 /**
- * Demonstrates parsing the sample RailML 3.2 document and reading common organizational units.
+ * Demonstrates parsing a RailML 3.2 document and reading common organizational units.
  */
 public class MyParser {
     /**
@@ -22,34 +22,29 @@ public class MyParser {
     }
 
     /**
-     * Parses the sample resource and prints the identifiers and codes of its organizational units.
+     * Parses an XML file and prints the identifiers and codes of its organizational units.
      *
-     * @throws IOException if the sample resource cannot be found or read
-     * @throws JAXBException if JAXB cannot bind the sample document
-     * @throws XMLStreamException if the sample XML is malformed
+     * @param xmlFile path to the RailML XML document
+     * @throws IOException if the XML file cannot be opened or read
+     * @throws JAXBException if JAXB cannot bind the document
+     * @throws XMLStreamException if the XML is malformed
      */
-    public void execute() throws IOException, JAXBException, XMLStreamException {
-        try (InputStream input = getClass().getResourceAsStream("/sample.xml")) {
-            if (input == null) {
-                throw new IOException("Could not find sample.xml on the classpath");
-            }
+    public void execute(Path xmlFile) throws IOException, JAXBException, XMLStreamException {
+        ParsedRailML parsed = new RailMLParser().parse(xmlFile, RailMLVersion.V3_2_SR4);
+        System.out.printf("Parsed RailML %s (%s)%n",
+                parsed.version().getLabel(), parsed.value().getClass().getName());
 
-            ParsedRailML parsed = new RailMLParser().parse(input, RailMLVersion.V3_2_SR4);
-            System.out.printf("Parsed RailML %s (%s)%n",
-                    parsed.version().getLabel(), parsed.value().getClass().getName());
+        RailML railML = parsed.valueAs(RailML.class);
+        if (railML.getCommon() == null
+                || railML.getCommon().getOrganizationalUnits() == null) {
+            throw new IllegalStateException(
+                    "The document has no common organizationalUnits element");
+        }
 
-            RailML railML = parsed.valueAs(RailML.class);
-            if (railML.getCommon() == null
-                    || railML.getCommon().getOrganizationalUnits() == null) {
-                throw new IllegalStateException(
-                        "The sample has no common organizationalUnits element");
-            }
-
-            System.out.printf("common id=%s%n", railML.getCommon().getId());
-            for (OrganizationalUnit unit
-                    : railML.getCommon().getOrganizationalUnits().getOrganizationalUnit()) {
-                System.out.printf("- id=%s, code=%s%n", unit.getId(), unit.getCode());
-            }
+        System.out.printf("common id=%s%n", railML.getCommon().getId());
+        for (OrganizationalUnit unit
+                : railML.getCommon().getOrganizationalUnits().getOrganizationalUnit()) {
+            System.out.printf("- id=%s, code=%s%n", unit.getId(), unit.getCode());
         }
     }
 }

@@ -71,7 +71,8 @@ XJC generation, compilation, tests, or Javadocs succeed.
 
 ## Tests and fixtures
 
-Parser tests are under `src/test/java/ro/apanescu/railml/parser`. They exercise explicit
+Parser tests are under `src/test/java/ro/apanescu/railml/parser`, with XML fixtures under
+`src/test/resources`. They exercise explicit
 version selection, typed generated roots, representative 3.2 sample data, and the
 caller-owned `InputStream` contract. Keep tests deterministic and avoid adding complete
 licensed schema distributions or large real-world RailML datasets as fixtures.

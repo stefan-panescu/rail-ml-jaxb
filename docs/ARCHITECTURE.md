@@ -22,9 +22,9 @@ XML + caller-selected RailMLVersion
                 +-- ParsedRailML(version, generated root object)
 ```
 
-The generated classes are part of the library JAR. The schema files and sample XML are
-excluded from packaged resources. Consumers need the library's runtime dependencies but
-not the source schema distributions.
+The generated classes are part of the library JAR. Schema files are excluded from
+packaged resources, and the sample XML fixture lives in test resources only. Consumers
+need the library's runtime dependencies but not the source schema distributions.
 
 ## Public API
 
@@ -91,8 +91,8 @@ distribution, the applicable binding file, or the XJC configuration and regenera
    execution and output directory in `pom.xml`.
 4. Add an enum entry in `RailMLVersion` pointing to the generated root class and namespace.
 5. Add parser tests for the root type and representative content. Keep fixtures minimal and
-   ensure they may be included in source control; the production JAR excludes
-   `sample.xml`.
+   ensure they may be included in source control; keep fixtures in `src/test/resources`
+   rather than production resources.
 6. Update the version matrix, schema archive setup, CI/release workflows as needed, and
    the README and roadmap.
 7. With all required schema inputs locally available, run `mvn clean verify` and inspect

@@ -83,7 +83,6 @@
           <configuration>
             <excludes>
               <exclude>railML*/**</exclude>
-              <exclude>sample.xml</exclude>
             </excludes>
           </configuration>
         </plugin>

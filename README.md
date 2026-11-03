@@ -50,7 +50,16 @@ After installing the artifact locally, use this dependency:
 
 The project is not currently published to a public Maven repository. Schema distributions
 are build-time inputs only; consumers of the built JAR do not need them. Generated JAXB
-classes are included in the JAR, but schema files and `sample.xml` are excluded.
+classes are included in the JAR. Schema files are excluded, and the sample XML is kept
+under test resources rather than production resources.
+
+The command-line example accepts the XML path as its single program argument. From an IDE,
+run `ro.apanescu.railml.example.App` with a runtime classpath and set that argument to the
+path of a RailML document. To launch it through Maven:
+
+```shell
+mvn -q "-Dexec.mainClass=ro.apanescu.railml.example.App" "-Dexec.args=<path-to-xml>" org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+```
 
 ## Project documentation
 

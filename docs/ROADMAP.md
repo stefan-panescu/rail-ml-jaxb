@@ -80,14 +80,15 @@ archive availability. Keep generated packages and XJC executions isolated per ve
 schema prerequisites are documented, tests pass, and licensing/use limitations are
 visible to consumers.
 
-### P5 — Improve release ergonomics
+### P5 — Improve release ergonomics — checksums complete
 
-**Plan:** After a release is legally and operationally approved, consider adding checksum
-files and a concise release checklist. Consider Maven repository publishing only after P2
-is decided.
+**Plan:** Keep a concise release checklist. Consider Maven repository publishing only
+after P2 is decided.
 
 **Done when:** Each release has reproducible source/version metadata, verified JAR
-contents, and a documented consumer-facing installation instruction.
+contents, and a documented consumer-facing installation instruction. The release
+workflow now attaches a SHA-256 manifest for both JARs and checks that schema and sample
+files are excluded.
 
 ## Plan maintenance
 

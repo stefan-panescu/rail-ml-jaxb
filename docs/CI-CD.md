@@ -7,7 +7,7 @@ The repository defines two GitHub Actions workflows:
 | Workflow | Trigger | Behavior |
 |---|---|---|
 | `CI` (`.github/workflows/ci.yml`) | Push to `master`, pull request, or manual dispatch | Always runs Maven metadata validation; runs schema-dependent `clean verify` only when explicitly enabled |
-| `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs only when distribution approval is enabled and the protected environment allows the job |
+| `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs plus a SHA-256 manifest only when distribution approval is enabled and the protected environment allows the job |
 
 The CI workflow runs with Java 17 and Maven caching. A green run with full checks disabled
 means only `mvn validate` passed; it does not mean sources compiled, tests passed, or
@@ -48,11 +48,24 @@ is exactly `true`. It waits for the `release` environment's protection rules. It
 the schema archive, runs `mvn clean verify` with the leading `v` removed from the GitHub
 release tag (for example, tag `v0.1.0` builds Maven version `0.1.0`), checks that the
 binary and Javadoc JARs exist and do not contain schema files, then attaches both JARs to
-the GitHub Release.
+the GitHub Release along with `SHA256SUMS`. The checksum manifest is generated from the
+built JARs on the runner; it is an integrity aid for downloads, not a signature or proof
+of publisher identity.
 
 `RAILML_DISTRIBUTION_APPROVED` is a repository-controlled gate, not evidence of legal
 approval. Do not set it merely to make the workflow run. The workflow does not publish to
 Maven Central or another Maven repository.
+
+After downloading the JARs and `SHA256SUMS`, verify the checksums from a shell in the
+directory containing all three files:
+
+```shell
+sha256sum --check SHA256SUMS
+```
+
+On Windows PowerShell, compare the manifest's expected digest against the output of
+`Get-FileHash .\rail-ml-jaxb-<version>.jar -Algorithm SHA256` and
+`Get-FileHash .\rail-ml-jaxb-<version>-javadoc.jar -Algorithm SHA256`.
 
 ## Troubleshooting
 

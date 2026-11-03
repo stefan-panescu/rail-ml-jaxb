@@ -68,11 +68,22 @@ jobs:
             "target/rail-ml-jaxb-${version}.jar" \
             "target/rail-ml-jaxb-${version}-javadoc.jar"; do
             test -f "$jar_file"
-            if jar tf "$jar_file" | grep -E '(^|/)[^/]+\.xsd$|^railML[^/]+/'; then
-              echo "The release JAR unexpectedly contains schema files." >&2
+            if jar tf "$jar_file" | grep -E '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$'; then
+              echo "The release JAR unexpectedly contains excluded schema or sample files." >&2
               exit 1
             fi
           done
+
+      - name: Generate SHA-256 checksums
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          version="${RELEASE_VERSION#v}"
+          cd target
+          sha256sum \
+            "rail-ml-jaxb-${version}.jar" \
+            "rail-ml-jaxb-${version}-javadoc.jar" \
+            > SHA256SUMS
 
       - name: Attach JAR to GitHub release
         env:
@@ -82,4 +93,5 @@ jobs:
           version="${RELEASE_VERSION#v}"
           gh release upload "$RELEASE_VERSION" \
             "target/rail-ml-jaxb-${version}.jar" \
-            "target/rail-ml-jaxb-${version}-javadoc.jar"
+            "target/rail-ml-jaxb-${version}-javadoc.jar" \
+            target/SHA256SUMS

@@ -64,10 +64,11 @@ is exactly `true`. It waits for the `release` environment's protection rules. It
 the schema archive, validates the tag format before restoring schemas, runs
 `mvn clean verify` with the leading `v` removed from the GitHub release tag (for example,
 tag `v0.1.0` builds Maven version `0.1.0`), checks that the
-binary and Javadoc JARs exist and do not contain schema files, then attaches both JARs to
-the GitHub Release along with `SHA256SUMS`. The checksum manifest is generated from the
-built JARs on the runner; it is an integrity aid for downloads, not a signature or proof
-of publisher identity.
+binary and Javadoc JARs exist, verifies that they contain the RailML 3.2 root model and
+documented parser API respectively, and rejects schema/sample files in either archive.
+It then attaches both JARs to the GitHub Release along with `SHA256SUMS`. The checksum
+manifest is generated from the built JARs on the runner; it is an integrity aid for
+downloads, not a signature or proof of publisher identity.
 
 `RAILML_DISTRIBUTION_APPROVED` is a repository-controlled gate, not evidence of legal
 approval. Do not set it merely to make the workflow run. The workflow does not publish to

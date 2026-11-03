@@ -74,11 +74,26 @@ jobs:
         run: |
           set -euo pipefail
           version="${RELEASE_VERSION#v}"
+          binary_jar="target/rail-ml-jaxb-${version}.jar"
+          javadoc_jar="target/rail-ml-jaxb-${version}-javadoc.jar"
+
+          test -f "$binary_jar"
+          test -f "$javadoc_jar"
+          if ! jar tf "$binary_jar" \
+            | grep -Fxq 'ro/apanescu/railml/generated/v32/RailML.class'; then
+            echo "The binary JAR is missing the RailML 3.2 root model class." >&2
+            exit 1
+          fi
+          if ! jar tf "$javadoc_jar" \
+            | grep -Fxq 'ro/apanescu/railml/parser/RailMLParser.html'; then
+            echo "The Javadoc JAR is missing the documented parser API." >&2
+            exit 1
+          fi
+
           for jar_file in \
-            "target/rail-ml-jaxb-${version}.jar" \
-            "target/rail-ml-jaxb-${version}-javadoc.jar"; do
-            test -f "$jar_file"
-            if jar tf "$jar_file" | grep -E '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$'; then
+            "$binary_jar" \
+            "$javadoc_jar"; do
+            if jar tf "$jar_file" | grep -Eiq '(^|/)[^/]+\.xsd$|^railML[^/]+/|^sample\.xml$'; then
               echo "The release JAR unexpectedly contains excluded schema or sample files." >&2
               exit 1
             fi

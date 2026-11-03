@@ -10,8 +10,9 @@ The repository defines two GitHub Actions workflows:
 | `Release` (`.github/workflows/release.yml`) | A GitHub Release is published | Attaches the binary and Javadoc JARs plus a SHA-256 manifest only when distribution approval is enabled and the protected environment allows the job |
 
 Both workflows use the repository's Maven Wrapper, which pins Maven 3.10.0 and verifies
-the downloaded distribution checksum. CI runs with Java 17 and Maven caching. With full
-checks disabled, a green run confirms Maven metadata validation through both the Linux and
+the downloaded distribution checksum. GitHub Actions are pinned to full commit hashes,
+and Dependabot checks them weekly. CI runs with Java 17 and Maven caching. With full checks
+disabled, a green run confirms Maven metadata validation through both the Linux and
 Windows wrappers; it does not mean sources compiled, tests passed, or Javadocs were
 generated. The Linux job summary makes this skipped state explicit.
 
